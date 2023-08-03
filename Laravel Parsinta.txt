@@ -1,0 +1,183 @@
+Penjelasan Series Pembelajaran Laravel 7
+
+
+# Installasi Composer, Laravel & Valet.
+# Routing = memetakkan URL ke fungsi fungsi dalam Controller.
+    {{  }} = memanggil passing data tetapi tidak bisa passing html.
+    {!!  !!} = memanggil passing data dan bisa melakukan passing html.
+    {!! nl2br !!} = akan mengenali jika ada text dengan baris baru maka akan diberi <br> secara otomatis.
+
+    ~ Asset, kita bisa memberikan yield pada title, head, content, script.
+    ~ Active, Request $request sama saja dengan request()
+        request()->fullUrl = akan memanggil full url nya yaitu http://127.0.0.1:8000/contact
+        request()->path = akan memanggil pathnya saja yaitu contact
+        request()->is('contact') ? '' : '' = akan mengecek apakah dia adalah page contact.
+    ~ Controller, controller invokable digunakan jika tidak ada method sama sekali, sehingga di dalam routenya kita bisa memanggil langsung controllernya.
+        misalkan HomeController
+        create : php artisan make:controller ProvisionServer --invokable
+    ~ Route Wild Card, url berupa slug agar unik & web akan sangat power.
+# Database
+    jika ingin setting .env ada file database ada di config > database.php
+    php artisan make:migration create_posts_table
+    ~ Eloquent, fitur dalam laravel / ORM (Object-Relational-Mapping) untuk berinteraksi dengan database (Model).
+        firstOrFail() jika page tidak ada maka akan ke 404
+        jika model adalah Kantor dan db yang kita buat adalah kantor juga kita bisa menghubungkannya secara manual dengan protected $table = 'kantor';
+    ~ Route Model Binding = mengikat model Eloquent langsung ke route nya
+        /posts/{slug} kita akan mengambil data berdasarkan slug.
+        /posts/{post} kita akan mengambil data berdasarkan id. Di model kita lakukan Post $post.
+            agar tidak berdasarkan id buat method di modelnya getRouteKeyName dengan melakukan return 'slug'.
+            maka {post} tidak akan berdasarkan id tapi akan berdasarkan Slug.
+        /posts/{post:slug} kita akan mengambil data dari post berdasarkan slug.
+    ~ Migration, membuat table menggunakan laravel.
+        php artisan make:migration create_posts_table
+        php artisan migrate                                         = menambahkan migrasi table ke db.
+        php artisan migrate:rollback                                = akan menarik semua migrasi tablenya.
+        php artisan make:migration add_hash_to_posts_table          = menyisipkan kolom baru ke table yang diinginkan
+            $table->string('hash')->after('title')->nullable();     = menambahkan kolom baru setelah title
+            $table->dropColumn('hash')                              = menghapus kolom hash
+    ~ Factory, membuat data palsu dengan menggunakan faker.
+    ~ Tinker, alat interaktif berbasis command-line yang disediakan oleh Laravel.
+        php artisan Tinker
+    ~ Pagination, Str::limit($post->body, 100) memberikan limit pada text.
+        jika get() adalah Object.
+        jika all() adalah Array.
+        menampilkan string hanya sedikit bisa menggunakan {{ Str::limit($post->body, 100, '.') }}
+        jika ingin melimit post pemanggilan di controllernya bisa menggunakan take(2).
+        jika melakukan paginate(2) maka get() tidak akan bisa dipakai.
+        karena perbedaannya paginate membagi data menjadi beberapa page,  sedangkan get() menampilkan semuanya secara langsung.
+        Untuk setting paginator ke bootstrap, tambahkan code Paginator::useBootstrap(); di AppServiceProvider
+            Post::paginate(2) atau Post::simplePaginate(2);
+            {{ $posts->links }}
+    ~ Create a New Data = https://laravel.com/docs/10.x/controllers
+        Jika create data itu seharusnya sebelum slug, karena jika tidak maka akan mengalami 404.
+            Merubah title
+                <title>{{ $title ?? 'Laravel Project' }}</title>
+                @extends('layouts.app', ['title' => 'The Title'])
+        Kita bisa menambahkan data baru dengan cara membuat object baru yaitu $post = new Post;
+        $post akan mendefinisikan title, slug, body kemudian kita save() dan akan tersimpan di database.
+        @forelse itu sama saja dengan foreach namun memiliki kondisi jika tidak ada data yg diloopingnya.
+    ~ Guarded & Fillable
+        $guarded = membuat artibut tersebut tidak bisa diisikan kecuali selain dari atribut itu.
+            *bisa saja jika hanya menggunakan guarded ada user yang mencoba mengakses, atau menginputkan data dengan id yang diinputkan. Makannya solusinya dengan fillable
+        $fillable = artibut itu harus diisikan, selain dari artibutnya data tidak akan diterima.
+    ~ Validation = dokumentasi https://laravel.com/docs/10.x/validation
+    ~ Session Flash, (Pesan notifikasi ketika berhasil create new Post / Membuat Alert)
+    ~ Update Data, jika ingin melakukan update ada Put & Patch.
+        Put = kita akan melakukan update semuanya.
+        Patch = kita akan melakukan update pada field tertentu saja.
+    ~ Delete Data, melakukan delete dengan menerapkan model dari bootstrap.
+    ~ Relasi Dasar
+        Di dalam Category posts{ hasMany(Post::class) } - dalam 1 kategory bisa mempunyai banyak postingan.
+        Di dalam Post category{ belongsTo(Category::class) } - dalam 1 post hanya bisa memiliki 1 category.
+
+        secara default jika kita di dalam table post menambahkan category_id maka secara otomatis akan mengarah kesana.
+        tapi jika kita menambahnya bukan category_id tapi misalkan subject maka kita harus memberikan penanda bahwa subject sebagai relasi antar tabelnya.
+            sehingga, category{ belongsTo(Category::class, 'subject') }
+
+        # One to Many & One to One
+            Post                                Category
+            - id                                - id
+            - category_id                       - name
+            - title                             - slug
+            - slug
+            - body
+
+            Penjelasan :
+                Category hasMany Post (1 Category pasti memili banyak Post).
+                Post belongsTo Category (1 Post pasti memiliki 1 Category).
+
+                *belongsTo itu sebagai ForeignKey dimana akan berfungsi untuk menghubungkan ke tabel lain.
+                *relasi ini memerlukan ForeignKey di dalam table sama.
+
+        # Many to Many
+            Post                                Tag                                 Post_Tag
+            - id                                - id                                - post_id
+            - category_id                       - name                              - tag_id
+            - title                             - slug
+            - slug
+            - body
+
+            Penjelasan :
+                Post belongsToMany Tag (banyak Post bisa memiliki banyak Tag).
+                Tag belongsToMany Post (banyak Tag bisa juga memiliki banyak Post).
+
+                *post_id & tag_id itu sebagai foreignId, namun kita harus berikan constrained('posts') / ('tags')
+                    karena agar kita menentukan bahwa post_id ini milik table Post.
+                *kita juga bisa menjadikan post_id & tag_id sebagai primary, agar lebih menandai jika post_id itu milik posts.
+                *relasi many many pasti ada 3 table, dan 1 table nya pasti sebagai pivot table / penghubung antar table, pembuatan table pivot harus terurut secara asc.
+                *relasi ini memerlukan ForeignKey di dalam table terpisah.
+    ~ Create & Edit data with tag
+        kita akan bisa memilih kategory dari post yang akan kita buat.
+        kita akan membuat tags yang diterima berupa array ke dalam post. dengan memberikan array di name input
+            name="tags[]"
+            *attach = biasanya berkaitan dengan relasi many to many.
+                $post->tags()->attach(request('tags'));
+                kita akan menambahkan permintaan yang ditangkap dari tags ke dalam postnya / menambahkan data ke tabel pivotnya sebagai penghubung 2 table.
+            sedangkan detach akan menghapusnya.
+        Akan menggunakan library select2.org agar user bisa melakukan multiple atau memilih lebih daru 1 tag.
+            *sync = biasanya berkaitan dengan relasi many to many.
+                $post->tags()sync(request('tags'));
+                digunakan untuk menyamakan data dari kedua table nya, menyamakan kalo si table pivot ini sama tidak dengan terhubungnya table post & tag.
+            *detach = biasanya berkaitan dengan relasi many to many.
+                $post->tags()->detach();
+                agar menghapus data dari tabel pivotnya karena relasi dari postnya akan dihapus.
+
+
+#Authentication (aplikasi_baru)
+    ~ laravel ui
+        Installasi : composer require laravel/ui --dev
+                     php artisan ui bootstrap --auth
+                     npm install
+                     npm run dev
+        Help : php artisan help ui
+               php artisan route list
+    ~ route name = memberikan nama pada routenya ->name('posts.index')
+        kelebihannya agar menampilkan error jika route salah & jika route diganti kita tidak perlu menulis ulang.
+    ~ middleware = memberikan __contruct di post controller agar yang bisa melakukan crud hanya user yang sudah login, dan menggunakan except(['index']) sebagai pengecualian jika method index bisa diakses tanpa login.
+        @if(Auth::check()) = melakukan pengecekan pada user apakah sudah login atau belum, tetapi dalam bentuk condition.
+        @auth              = sama saja melakukan pengecekan pada user apakah sudah login atau belum.
+        @can('admin')      = menampilkan bagiannya dimana yang bisa melakukan hanya admin
+
+        tidak akan, menggunakan method __contruct dan middleware('auth') tetapi akan menggunakan route group
+        Route::middleware('auth')->group(function() {});
+            jika ingin routenya tidak ingin ada middleware bisa dengan cara ->withoutMiddleware('auth')
+            karena routenya sama yaitu posts bisa saja menggunakan prefix('posts')
+            maka url di dalam groupnya tidak memerlukan posts lagi, cukup /create atau /{post:slug}/edit.
+    ~ Modifikasi Field
+        menambahkan username di table user.
+        menambahkan relasi foreignId('user_id') di post
+        membuat seeder baru php artisan make:seed CategoriesTableSeeder
+        spesifik memberikan seed php artisan db:seed --class=CategoriesTableSeeder
+            ['Code', 'Design', 'Blog'] = array
+            collect(['Code', 'Design', 'Blog']) = collection
+    ~ Login with username
+        cukup dengan membuat method dengan nama username() dan return 'username';
+        sebenarnya method ini ada di dalam AuthenticatesUsers tapi sebaiknya jangan dirubah.
+    ~ Membuat Relasi antar User dan Post agar bisa menampilkan author dari postingan yang dibuatnya.
+        Melakukan kondisi juga untuk delete @if(auth()->user()->id == $post->user_id)
+            jadi jika itu postingan miliknya biarkan user tersebut menghapus, tapi jika bukan miliknya jangan tampilkan button hapus.
+    ~ Policy & basic role
+        policy digunakan untuk mengatur otorisasi hak akses.
+            php artisan make:policy PostPolicy -m "Post"
+        PELAJARI KEMBALI ROLE & POLICY
+    ~ Upload Image
+        didalam form berikan enctype agar dapat menerima file
+        buka ke filesystem 'default' => env('FILESYSTEM_DISK', 'local'),
+        kemudian buka .env tambahkan FILESYSTEM_DISK=public
+        lalu di dalam controllernya kita gunakan method storeAs() dan juga exstension() atau dengan menggunakan store()
+            symbolic link dengan php artisan storage:link
+            membuat gambar menjadi attribute di model
+    ~ Design Ulang Postnya
+        merubah sedikit designnya dan menambahkan tools gravatar untuk merubahh image menjadi gambar
+    ~ Eager Loading (N+1)
+        implementasi dengan menggunakan laravel debuggar
+            composer require barryvdh/laravel-debugbar --dev
+        mengatasinya dengan eager loading dengan menambahkan with()
+    ~ Searching
+        copy form search di bootstrap
+        php artisan vendor:pubish
+            16 / laravel-pagination
+            digunakan untuk mesetting view paginationnya
+
+        php artisan vendor:publish
+            13 / laravel-error

@@ -1,0 +1,1798 @@
+	#1 Intro ==============
+
+Laravel?
+= "Laravel is a web application framework with expressive, elegant syntax."
+
+Web Application Framework
+	+ Sebuah 'kerangka' yang di design untuk mendukung pembangunan aplikasi web
+	+ Menyediakan standar / cara untuk membuat aplikasi web
+	+ Bertujuan untuk mengotomasi hal hal umum yang biasanya dilakukan saat membangun aplikasi web
+	+ Contohnya : database library (koneksi ke database), templating engine, session management, authentication, security, dll
+
+Sejarah Laravel 
+> Dibuat oleh Taylor Otwell
+> Juni 2011
+> Sebagai alternatif framework selain CodeIgniter
+
+Filosofi Laravel
+= "We believe development must be an enjoyable, creative experience to be truly fulfilling." 	- Taylor Otwell
+
+Tujuan Laravel
+= "Laravel aims to make the development process a pleasing one for the developer without sacrificing application functionality. Happy developer make the best code." 	- Taylor Otwell
+
+Fitur utama pada Laravel
+	+ MVC
+	+ Template Engine
+	+ Artisan Console
+	+ Eloquent ORM (Berinteraksi dengan database)
+	+ Authentication & Authorization
+	+ Testing
+	+ Packaging System
+	+ Multiple File System
+	+ Task Scheduling
+	+ Websocket Programming
+
+Pre-Requisite
+	+ PHP dasar
+	+ Object Oriented Programming
+	+ Konsep MVC
+
+Reqirement
+	+ PHP v7.4/8 
+	+ MySQL
+	+ Composer 2 (Akan menginstal laravel menggunakan composer)
+	+ SequelPro / MySql Workbench
+	+ Terminal / CMD / PowerShell / GitBash
+	+ Code Editor
+	+ Web Browser
+	+ Ekstension
+		> PHP Intelephense
+		> Laravel Artisan
+		> Laravel Snippets
+		> Laravel Blade Snippets
+		> Laravel Blade Spacer
+		> Laravel Go To View
+	
+
+
+
+
+#2 Instalasi & Konfigurasi ==============
+
+Download dan Install 
+> Xampp 
+> Composer
+
+Membuat folder untuk menyimpan aplikasi Laravel
+Lokasi Folder : C:\LaravelApp
+
+Melakukan instalasi laravel menggunakan composer
+	"composer create-project laravel/laravel example-app"		-- Mendownload Laravel dari Repositori Laravel
+
+Menjalankan local development server laravel
+	"php artisan serve"
+
+
+Atau Install Laravel Secara Global
+
+Melakukan instalasi laravel secara global
+	C:/LaravelApp/ composer global require laravel/installer	-- Mendownload Laravel Instalasi Global
+	C:/LaravelApp/ laravel						-- Cek laravel env
+	
+	setting env
+	System variables >> Path (Edit) >> New (%USERPROFILE%\AppData\Roaming\Composer\vendor\bin)
+
+	C:/LaravelApp/ laravel new Coba-Laravel				-- Instal Laravel melalui Installer Global
+
+
+Laravel Valet
+packagist.org	>> cretueusebiu/valet-windows
+composer global require cretueusebiu/valet-windows			-- Instal Laravel/Valet Global
+valet install								-- Instal Valet
+
+Config DNS
+https://mayakron.altervista.org/support/acrylic/Windows10Configuration.htm
+
+Valet menggunakan port:8080 dimana sudah digunakan oleh xampp maka rubah port xampp agar tidak bentrok.
+Xampp >> Apache (Config) >> Apache (httpd.conf)
+ubah Listen 80 menjadi 			>> Listen 8080
+ubah ServerName localhost:80 menjadi 	>> ServerName localhost:8080
+
+Valet akan membuat configurasi server menjadi lebih mudah.
+Akan merubah semua folder yang ada di dalam C:/LaravelApp menjadi aplikasi laravel (tempat parkir valet).
+	C:/LaravelApp/ valet park					-- Sebagai tempat parkir Valet
+	C:/LaravelApp/ valet start 					-- Untuk Memulai Valet
+
+Sekarang Xampp akan menjadi localhost:8080
+
+
+
+
+
+#3 Struktur Folder, Routes & View ==============
+
+Lokasi MVC di Laravel 
+	> model tersimpan di app.
+	> views tersimpan di resources.
+	> Controllers tersimpan di app/http/Controllers.
+
+	+ routes berisi file file untuk routing atau penjaluran.
+	+ public tempat menyimpan asset asset statis (css, js, img).
+	+ resources, di dalamnya berisi folder css, js, img itu digunakan untuk system bundling.
+	+ .env file untuk menentukan environment dari aplikasi.
+
+Penjelasan :
+
+Membuat route sendiri untuk halaman Home, About, Blog dan membuat view awal untuk ketiga pagenya.
+Membuat file css di public (css/style.css). 
+	untuk langsung menghubungkan ke css cukup langsung panggil file css yg ada di public dengan menggunakan tag link di headernya.
+	Begitu pula dengan js dan img
+
+*Mengirimkan data di Routes	(mungkin saja data berubah dari user yg login)
+	mengirimkan data berupa array assosiatif karena mungkin saja data yang dikirimkan banyak.
+	dan lakukan pemanggilan data di dalam routesnya <?php echo $data... ?>
+
+
+
+
+
+#4 Blade Templating Engine ==============
+
+Templating Engine, adalah sebuah fitur atau tools untuk membantu dalam mengelola tampilan halaman web khususnya untuk sebuah framework. Laravel templating engine dengan nama -> Blade.
+
+Docs. Laravel.com >> The Basics >> Blade Templates
+
+Perbedaan pemanggilan dengan menggunakan Blade Template.
+PHP										Blade
+<?php echo $nama; ?> 					Hello, {{ $name }}.
+
+*Pemanggilan langsung menggunakan Blade Template otomatis ditambahkan syntax php htmlspecialchars().
+dan akan berjalan jika nama file ada bladenya
+
+Memberikan Navbar dari bootstrap.
+
+
+Docs. Laravel.com >> The Basics >> Blade Templates >> Extending a Layout
+
+child view extends ke file layout
+
+Membuat folder layouts
+Membuat file main.blade.php yang isinya sama dengan home
+	main.blade.php akan menjadi layout utamanya, yang nantinya di dalam layout utamanya yg berbeda hanya isi dari containernya saja.
+	dengan memberikan @yield('container') 
+	yg artinya adalah main.blade.php akan menjadi halaman utama berisi header, footer dan container. Di dalam containernya akan berisi dari container home, about, ataupun blog.
+	agar container utama dapat berisi dari container childnya maka main.blade.php akan menjadi parentnya.
+	misalkan : <div class="container">
+					@yield('container')
+				</div>
+
+				artinya di dalam main.blade.php itu akan berisi container dari halamannya.
+
+	dan untuk childnya dapat langsung melakukan seperti berikut
+				@section('container')
+					<h1>Hello, WorldQ</h1>
+				@endsection
+
+				*Maka di halaman main.blade.php akan menggantikan isi dari containernya dengan container childnya.
+
+	Namun untuk dapat menentukan yield dan sectionnya. Jangan lupa untuk memanggil tag utamanya yaitu @extends('misalkan : layout/header') di awal code childnya.
+
+
+Membuat folder baru untuk memindahkan isi kontent kontent spesifik (misalkan. Navbar)
+Maka nanti di file main.blade.php akan memisahkan navbar menjadi sebuah kontent terpisah.
+untuk memanggilnya dapat dilakukan dengan include('partials/navbar')
+
+Kenapa include? 
+	Karena kita akan memanggil navbarnya.
+	Jika extends itu child akan melakukan inheritance pada file parentnya.
+
+
+Akan mengirimkan data agar halaman menjadi dinamis, misalkan halaman home nama page headnya home, dan yang lainnya.
+Membuat navbar text lebih terang ketika sedang di page tertentu.
+
+	<a class="nav-link {{ ($title === "Halaman Home")? 'active' : '' }}" href="/">Home</a>
+
+	maka jika $judul sama dengan "..isi judul.." ? berikan text active : jika tidak maka jangan beri class active
+
+
+Di halaman web.php sementara membuat $blog_post sebagai data pengganti dari database.
+dan ceritanya data sementara tersbut akan dipakai di halaman blog dengan mengirimkan isi dari $blog_post
+
+exert, menampilkan kontent hanya sedikitnya ketika di klik maka akan berpindah ke halaman dengan page yang berisi data lengkapnya.
+slug, adalah versi lain dari title. Biasanya merubah judulnya jadi huruf kecil semua dan setiap spasinya diganti dengan menggunakan dash. slug juga tidak boleh memiliki nama yang sama karena akan menjadi sebagai penanda.
+
+* WildCard untuk mengambil apapun isi dari slashnya
+Route::get('posts/{slug}');
+
+Membuat file dan route untuk slug yang akan menampilkan data informasi lebih lengkap dari sebuah content.
+Dimana route tersbut akan menerima data dari url.
+
+
+
+
+
+#5 Model, Collection & Controller ==============
+
+Proses yang dilakukan sebelumnya kita memanggil halaman data dan proses di dalam sebuah route secara bersamaan dan itu kurng tepat. Pada eps ini akan memisahkan komponennya.
+
+Akan memperbaiki data sementara, agar seolah olah sebuah model data dari database.
+Maka nanti akan ada model berupa class di dalam code kita, yang class ini nanti bisa dipetakkan ke dalam tabel. Maka akan dengan mudah memanipulasi table (Insert, Update, Delete).
+
+Membuat Model
+	* php artisan make:model (Nama_Model)
+
+	Membuat model menggunakan Exstension Laravel Artisan.
+	CTRL + SHIFT + P >> ketik Artisan (Pilih Artisan:Make Model)
+
+	Masukkan nama model, dan karena di eps ini lebih menjelaskan kepembuatan model maka untuk controller, migration, factori untuk 'NO' terlebih dahulu.
+
+	Jika sudah maka akan ada file models di App >> Models
+
+
+Selanjutnya akan memindahkan data sementara di halaman post ke dalam sebuah models >> Post yang akan mengelola data untuk halaman /blog
+
+Ekstension untuk mengelola namespace atau pemanggilan seperti (use App\Models\Post)
+Exs : PHP Namespace Resolver
+maka daripada menuliskan use ...\...\... secara manual maka dengan exstension ini kita hanya cukup klik kanan dan Import All Class
+
+Halaman Models akan berisi sebuah class dan method yang akan dipakai untuk routesnya. Karena routes akan memanggil data dari model dan memanggil tiap method yang ada di dalamnya.
+
+
+Selanjutnya akan merubah data yang diambil menjadi sebuah Collections di dalam Laravel.
+Apa itu Collections ?
+	Collections sebetulnya adalah pembungkus untuk sebuah array, yang akan membuat array menjadi lebih sakti.
+	Nah jadi array yang asalnya biasa dengan membuatnya 
+	sebagai collcetion maka akan dapat memanggil fungsi dari laravelnya.
+
+	Kenapa harus dijadikan Collections?
+	karena misalkan kita akan menggunakan fungsi first (untuk mencari element yang pertama).
+
+	Membungkus dengan Collections
+        * return collect(self::$blog_posts);
+
+
+Controllers
+Apa itu controllers? 
+	Singkatnya daripada mendefinisikan semua logic di dalam sebuah closure, di dalam route file kita dapat merapihkannya menggunakan class Controller. Controller bisa menggabungkan atau mengelompokkan request yang serupa yang saling terkait untuk menangani logic ke dalam sebuah class. Misalnya kita akan membuat sebuah class untuk menangani dan mengelola postingan itu cocok untuk 1 controller.
+		
+		closure adalah 
+		.., function () {
+			return view('home', [
+				"title" => "Halaman Home",
+			]);
+		... 
+
+	Jika menggunakan controllers kita tidak lagi menggunakan closure cukup menuliskan	
+		* Route::get('/user/{id}', [UserController::class, 'show']);
+
+	Cara membuatnya dapat menggunakan artisan atau menggunakan exs Laravel Artisan
+	CTRL + SHIFT + P >> Pilih Artisan: Make Controller >> (nama Controller) >> Pilih Basic
+
+
+Migration adalah untuk menuliskan skema database dan akan nanti akan menggenerate tabel di dalam database nya.
+
+
+
+
+
+#6 Database, Migration & Eloquent ==============
+
+Akan bekerja menggunakan database di dalam Aplikasi Laravel.
+
+Laravel.com >> Environment Configuration
+file .env untuk melakukan setting pada lingkungan pengembangan di dalam aplikasi.
+
+.env						= adalah variabel yang digunakan untuk aplikasi
+.env example				= adalah template .env
+
+Penjelasan .env
+APP_NAME					= Nama dari aplikasi.
+APP_ENV						= jika local artinya masih pada tahap pembangunan.
+							  jika development maka sudah di tahap development dan tidak akan menampilkan pesan error.
+APP_KEY						= Key dari aplikasi yang otomatis dibuat ketika create laravel.
+APP_URL						= url untuk aplikasi.
+
+DB_CONNECTION=mysql			= menentukan konfigurasi database dari aplikasi, secara default koneksi ke mysql.
+DB_HOST=127.0.0.1			= default localhost
+DB_PORT=3306				= default port
+DB_DATABASE=wpu_laravel		= nama database yang akan digunakan
+DB_USERNAME=root			= nama username
+DB_PASSWORD=				= password
+
+
+Membuat database wpu_laravel
+untuk membuat tabel, ada cara dengan menggunakan laravel yaitu migration.
+
+Laravel.com >> Database:Migration
+
+Migration itu layaknya version control seperti git.
+Migration dapat melacak perubahan pada codingan kita, migration ini untuk melacak perubahan yang tejadi pada database lewat codingan Laravel, yang memungkinkan kita dan tim untuk mendefinisikan serta mendistribusikan / membagikan struktur dari database.
+Jadi struktur tabelnya tidak dibuat lagi di database, tapi dibuat menggunakan codingan (lewat class yang ada di dalam laravel).
+
+Caranya dapat menggunakan Artisan
+	* php artisan make:migration create_mahasiswa_table
+
+	Secara default laravel juga sudah memiliki beberapa file migration
+		yaitu (create_user_table, create_password_reset_token_table, create_failed_jobs_table, create_personal_access_tokens_table)
+
+	Menjalankan migrasi 
+	* php artisan migrate
+		nanti semua file migrasinya (file migrasi default laravel juga) akan dieksekusi untuk menjadi sebuah tabel.
+
+Di dalam migration pasti ada 2 buah method yaitu up() dan down()
+	up()	digunakan ketika kita akan membuat schema(struktur tabel) atau isi table dari database.
+	down()	digunakan ketika kita akan menghilangkan Schema yang telah dibuat.
+			Perintah php artisan untuk down()
+				* php artisan migrate:rollback	
+				maka semua migration akan menjalankan fungsi down() dan semua tabel dari databasenya akan dihapus.
+
+
+				* php artisan migrate:fresh
+				maka akan melakukan migrate:rollback dan migrate sekaligus.
+				biasanya ketika kita akan mengubah schema dari tabel.
+
+Nambahin atau merubah schema / cara membuat dan nambahin table
+Laravel.com >> Database:Columns
+Berisi tipe data yang dipilih
+
+Untuk menambah data di dalam MySQL Workbench
+Klik kanan pada tabel >> Select Rows >> Form Edior
+
+Akan mengisi data tanpa mengisikannya di MySQL Workbench dengan menggunakan Eloquent di Laravel
+Laravel.com >> Eloquent
+Eloquent ORM. Apa itu ORM?
+	ORM (Object Relational Mapper), adalah sebuah fungsi untuk memetakkan tiap tiap data yang ada di dalam tabel atau database nanti ke dalam sebuah object. Saat menggunakan Eloquent ini setiap tabel di dalam database kita itu berkorespondensi atau terhubung ke dalam sebuah model yang dapat kita gunakan untuk berinteraksi dengan tabel. Jadi di dalam aplikasi dan database ada perantara yang namanya model. Selain dapat mengambil record atau data data dari database, Eloquent ini memungkinkan kita juga untuk melakukan CRUD ke dalam tabel lewat codingan.
+
+	Dan ORM ini bisa terjadi karena Active Record Pattern. Sebuah pendekatan untuk mengakses data di dalam database, jadi tabel di dalam database dibungkus menjadi sebuah class. Jika ada class yang merepresentasikan tabel maka setiap data / row itu terhubung terhadap instance classnya(object)
+
+	Cara Melakukan ORM
+	menggunakan tinker
+
+	* php artisan tinker
+	  $user = new App\Model\User;
+	  $user->name = "Luthfi Nur Ramadhan";
+	  $user->email = "luthfiramadhan.lr55@gmail.com";
+	  $user->password = bcrypt("Luthfi Nur Ramadhan");
+
+	  dengan menuliskan code tersebut kita telah menambahkan sebuah object, namun belum tersimpan ke database dan harus melakukan ServerName
+	  $user->save()
+
+	  Jika telah di save maka akan ada baris baru data di dalam tabel user, Tanpa harus menginputkan di databasenya.
+
+	Melihat isi datanya menggunakan tinker
+	$user->all()
+
+	menggunakan function Collection, misalkan
+	$user->first()					= menampilkan data pertama
+	$user->find(2)					= mencari berdasarkan id
+	$user->findOrFail(20)			= mencari berdasarkan id jika id tidak ada maka akan menampilkan exception (model not found)
+	$user->pluck('title')			= mencari dan menampilkan judulnya saja
+
+	Untuk keluar dari laravel tinker cukup dengan CTRL + C
+
+
+
+
+#7 Post Model ==============
+
+Membuat model dengan merepresentasikan model sebagai class dari database.
+
+Model Post
+Hapus model Post sebelumnya dan membuat Model Post Baru.
+
+Membuat model
+	* php artisan make:model
+Membuat migration (scheme table)
+
+agar membuat keduanya sekaligus
+	* php artisan make:model -m Post			= maka akan dibuatkan 2 buah file (models dan migration)
+
+Membuat isi tabel apa saja di dalam migrasi Post dan menambahkannya ke database.
+Mengisikan datanya menggunakan tinker.
+
+Lalu sedikit perubahan di post.blade dan posts.blade dan juga mengganti dari asalnya notasi array menjadi notasi object.
+
+Jika di dalam body data kita ingin memberikan tag html di dalamnya misalkan <p>....</p>
+maka jika di dalam laravel kita menggunakan pemanggilan menggunakan blade template {{ ... }}
+itu tidak akan bisa karena laravel akan mengamankan isi data dengan di dalamnya menjalankan fungsi htmlspecialchars.
+Agar jika ada tag html di dalam database dan ingin tetap menampilkannya dengan menggunakan {!!  !!}
+
+Ada cara lain untuk mengisikan data ke databasenya dengan cara
+	* App\Models\Post::create([
+		'title' => "...",
+		'excerpt' => "...",
+		'body' => "...",
+	])
+
+	namun itu tidak akan bisa di jalankan langsung di tingker karena secara default laravel tidak mengizinkan kita untuk mengisikan data banyak secara langsung. Agar dapat bisa melakukannya dengan menambahkan fillable di Model Post.
+	Jika sudah reset tingkernya terlebih dahulu CTRL + D (Keluar dan masuk lagi ke tinker)
+
+
+	Ada Juga kebalikan dari fillable yang tidak perlu memasukkan satu persatu field mana yang ingin diisi.
+	karena $guarded itu adalahan field yang tidak boleh diisi.
+
+	Misalkan jika ingin merubah data
+	* App\Models\Post::find(3)->update(['title' => 'Judul Ketiga Baru'])
+
+	cara lain mengedit
+	* App\Models\Post::where('title', 'Judul Ketiga Update')->update(['excerpt' => 'excerpt postingan ke tiga berubah'])
+
+
+Route Model Binding
+Laravel.com >> Route Model Binding
+	Fitur laravel route model binding yang tugasnya mengskip apa yang dilakukan, misalnya mencari query data berdasarkan id di dalam route atau controllernya melakukan query cari post yang idnya berapa ... . 
+	
+	Biasanya itu kita akan query record yang kita cari berdasarkan id. Nah... Laravel dengan Route Model Binding Laravelnya akan mengskip apa yang dilakukan tadi dan akan melakukan langsung query supaya dapat langsung data sesuai dengan apa yang dibutuhkan. Tanpa harus cari berdasarkan id dan query, dengan route model binding itu akan dilakukan secara otomatis.
+
+	Cara nya jika kita mencari sesuatu biasanya /user/{id}
+	Nah sekarang dengan menggunakan route model binding kita hanya panggins instancenya. Jika kita kirimkan user maka cukup /user/{user_name}
+	Tapi di dalam functionnya diberikan parameternya langsung kasih type hintingnya.
+	Kita lansung kasih tipedatanya bahwa dia itu adalah model yang namanya User
+	
+	Contoh
+		* Route::get('posts/{user_name:user}, function( Post $user_name))
+		atau
+		* Route::get('posts/{post:slug}, function( Post $post))
+
+	$user_name itu keduanya harus sama persis
+
+	Di dalam Controllernya kita sudah tidak membutuhkan id karena bisa langsung memanggil modelsnya
+
+	Contoh	:
+			public function show($id){
+				return view('post', [
+					"title" => "Halaman Single Post",
+					"post" => Post::find($id)
+				]);
+			}
+
+		Karena kita akan melakukan Route Model Binding maka kita tidak akan mencari berdasarkan id.
+		Karena kita dapat langsung melakukan query tanpa harus berdasarkan id
+		Dengan cara berikut
+
+			public function show(Post $post){
+				return view('post', [
+					"title" => "Halaman Single Post",
+					"post" => $post
+				]);
+			}
+
+		Di dalam Route kita mengirimkan data $post dan akan ditangkap oleh model Post. Agar dapat ditangkap kita membuat parameter di dalam function shownya memiliki keterikatan dengan Model Post dimana model post hanya memiliki parameter yang tidak boleh diisi yaitu $id. Oleh karena itu id akan dibuat secara otomatis oleh Modelsnya dan di dalam method view kita menerima parameter $post dan akan mengembalikan sebuah $post baru berdasarkan $post yang ditangkap sebagai parameter.
+
+		Hal ini memungkinkan kita untuk mengirimkan data bukan lagi berdasarkan id karena jika id bisa saja gampang ditebak.
+
+		Cara Pakainya gimana agar tidak berdasarkan id?
+		Nah di dalam migrasi misalkan kita membuat baris data baru dengan nama slug dan diberikan function unique() karena sebagai pembeda bahwa baris ini unik dan tidak akan sama
+
+		Contoh 	
+            * $table->string('slug')->unique();
+		
+		Nah jadi di dalam routenya itu akan mengirimkan data parameter yaitu $post yang memanggil slug karena setiap slug akan berbeda satu sama lain. Kemudian akan ditangkap oleh Controllernya dan controller akan mengisikan post dengan data dari $post yang baru
+		Maka di halaman index (blade) kita cukup panggil si post yang sudah diisikan dengan data baru beserta apa yang ingin dipanggilnya.
+
+		Penjelasan "post" => $post
+		"post" akan diisi oleh $post yang berisi (id, title, slug, excerpt, body, published_at)
+		nah si blade memanggil si "post" dengan cara laravel yaitu menggunakan $post
+		dan apa yang ingin ditampilkannya
+
+		misalkan <h1>{{ $post->title }}</h1> 
+		maka akan menampilkan judulnya saja dari data yang sudah ada
+
+	Cara membuatnya lihat di Route, PostController, Model Post dan juga kita akan menambahkan slug untuk migrasinya.
+	karena data akan di migrate:fresh maka kita akna mengisikan datanya lagi di php artisan tinker
+
+	App\Models\Post::create([
+		'title' => "...",
+		'slug' => "...",
+		'excerpt' => "...",
+		'body' => "...",
+	])
+	
+	setelah itu agar yang dikirimkan bukan lagi id tetapi slug. agar dapat mencarinya slug ubah di posts menjadi slug ketika user mengklik. lalu ubah routes 
+		* Route::get('posts/{post:slug}', [PostController::class, 'show']);
+
+		jadi yang sebelumnya where id = ...
+		sekarang menjadi slug = ... cukup merubah menjadi post:slug
+
+
+
+
+
+#8 Post Category & Eloquent Relationship ==============
+
+Keterhubungan antar tabel / model.
+
+Akan menambahkan category pada postingan di blog.
+Langkah pertama akan membuat model dan migrasi dari kategory
+	* php artisan make:model -m Category
+
+
+Lalu buat schema untuk category (id, name, slug).
+agar ada keterikatan antara Post dan Category di dalam Post harus ada Foreign Key
+    * $table->foreignId('category_id');						untuk foreign key antara post dan category
+	Lalu lakukan migrate:fresh
+
+Lalu isi beberapa kategory dengan tinker
+    * App\Models\Category::create([
+      'name' => "Personal",
+      'slug' => "personal"
+      ])
+
+	* App\Models\Category::all()
+	
+
+Lalu isi juga beberapa post dengan tinker
+	*  App\Models\Post::create([
+		  	'title' => "...",
+			'category_id' => 4,
+			'slug' => "....", 
+			'excerpt' => "...",
+			'body' => "..."
+		])
+
+	* App\Models\Post::where('category_id', 1)->get()
+
+Nah akan lebih bagus jika kita langsung tau nama categorynya, karena sekarang ini masih berupa id. 
+Untuk mencari namanya jika menggunakan SQL biasa itu kita harus melakukan JOIN antara tabel 1 & 2.
+jika ingin melakukan itu di laravel kita harus menentukan Relationship antar modelnya.
+
+Laravel.com >> Eloquent:Relationship
+Tabel di dalam database itu biasanya berelasi satu sama lain.
+Contohnya misalkan jika membuat system blog post mungkin saja bisa memiliki banyak komentar.
+1 Post bisa punya banyak Komentar.
+Nah Komentar ini selain berelasi dengan Post pasti juga berelasi dengan siapa yang menuliskannya(user), maka akan berkemungkinan juga ada relasi dengan User.
+Maka post dapat berelasi dengan komentar dan bisa berelasi dengan user juga.
+
+Tabel Relationship
+Kita tahu sekarang sudah memiliki table Post dan akan menghubungkan dengan tabel Kategory
+Nanti setiap Post akan memiliki kategory.
+
+Menghubungkan dari data definisi dengan menambahkan  data sebuah catergory_id ☆
+dengan menambahkan foreign key maka tabel kategory bisa berelasi dengan tabel Post
+
+Hubungan antar tabel 1 Category bisa memiliki banyak Post (One to Many)
+Hubungan antar kebalikan tabel 1 Post hanya memiliki 1 Category (One to One)
+
+Jika dalam sebuaht tabel ingin memiliki 2 buah category atau lebih maka sebaiknya menggunakan fitur tags.
+
+Category hasMany Post
+Post BelongsTo Category
+
+Post {												Categories {
+	id ★												id ★
+	category_id ☆										name
+	title												slug
+	slug												}
+	excerpt
+	body
+	published_at
+}
+
+Contoh Relationship 2
+
+Post ke User itu (One to One) BelongsTo
+	*Karena 1 Postingan dimiliki oleh 1 user saja
+User ke Post itu (One to Many) hasMany
+	*Karena 1 User bisa memiliki banyak Postingan	
+
+Post {												Users {
+	id ★												id ★
+	category_id ☆										name
+	user_id	☆	     									username
+	title												 password
+	slug											 }
+	excerpt
+	body
+	published_at
+}
+
+Contoh Relationship 3
+
+1 Post hasMany Comments (One to Many)	 -- 1 post memiliki banyak komen
+1 Comments BelongsTo 1 Post (One to One) -- 1 comment pasti ada di 1 postingan
+1 Comments BelongsTo 1 Users (One to One)-- 1 Comments pasti ditulis oleh 1 User
+1 Users hasMany Comments (One to Many)   -- 1 User bisa saja memiliki banyak comment 
+
+Post {									Comments{							Users{
+	id ★									id ★								id ★
+	category_id ☆							post_id	☆							name
+	user_id	☆	     						user_id	☆							username
+	title									body								password
+	slug									...									}
+	excerpt									}
+	body
+	published_at
+}
+
+Jika ingin menghubungkan models Post dengan models Category maka di dalam models Post kita akan membuat sebuah method baru (nama methodnya sama dengan nama modelnya).
+    * return $this->belongsTo(Category::class);
+
+Cara cek keterhubungannya di tinker
+	* php artisan tinker
+	  $post = App\Models\Post::first()
+
+	  $post->category
+	  		ini akan memanggi method yang BelongsTo(Category::)
+			dan ini akan otomatis dicarikan kategory yang sesuai.
+			Maka dari post yang pertama karena category_idnya 1 maka ia akan mendapatkan seluruh instance dari tabel category
+	  $post->category->name
+	  		dengan menuliskan itu kita bisa tau nama kategorinya
+
+
+Maka tambahkan di post.blade.php untuk memanggil category
+        * <p class="mb-5">By. Izuchii in {{ $post->category->name }}</p>
+
+		untuk membuat si category menjadi sebuah link dan jika di klik akan menampilkan post post dengan kategori yang sama
+	        *  <p class="mb-5">By. Izuchii in <a href="/categories/{{ $post->category->slug }}">{{ $post->category->name }}</a></p>
+
+		Lalu buat route nya (untuk sementara masih menggunakan function(){...}
+
+			Route::get('categories/{category:slug}', function(Category $category){
+				return view('category', [
+					"title" => "Kategory" . $category->name,
+					// 1 kategory bisa punya banyak post
+					"posts" => $category->posts,
+					"category" => $category->name
+				]);
+			});)
+
+
+		Selanjutnya buat view untuk halaman category
+		dan jangan lupa untuk menambahkan method post di Category sebagai 1 to Many
+		    public function posts(){
+				return $this->hasMany(Post::class);
+			}	
+
+		kita dapat mengeceknya juga dengan tinker
+			* $category = App\Models\Category::first()
+			* $category->posts
+
+
+	Terakhir membuat route untuk view Categories yang akan menampilkan semua kategori yang ada.
+
+
+
+
+#9 Database Seeder ==============
+
+Akan melakukan relasi dari tabel Post dan User. Karena nanti akan ada perubahan schema pada tabel yang membuat data akan menjadi kosong kembali. Itu akan ribet jika kita menggunakan artisan tinker karena harus memasukan data secara berulang. Maka sekarang akan menggunakan fitur dari laravel yaitu Seeder dan Factory agar dengan mudah mempopulasi atau mengisikan data secara otomatis ketika melakukan migrasi.
+
+Apa itu Seeder dan Bagaimana Cara Menggunakannya?
+laravel.com >> Database: Seeding
+
+	Sebelumnya, melakukan editing pada tampilan untuk halaman posts.
+	Dan di dalam migrasinya menambahkan foreign key user_id untuk ke tabel Users
+	Dan data pun akan dihapus lagi ketika melakukan migrate
+
+	Seeding, seperti menyemai benih (bisa mengisi otomatis tabel kita ketika dibuat).
+	Seeding memiliki kemampuan untuk melakukan seed di dalam database dengan data testing. Caranya dengan menggunakan class seed. Jadi setiap model dapat membuat class seed nya dan disimpan di folder database/seeders.
+
+	Untuk membuatnya dengan mengetikkan
+		* php artisan make:seeder UserSeeder
+
+	Atau dapat dengan membuat factories yang akan dijelaskan di episode berikutnya, sebagai pabrik pembuat data (yang akan membuat seedingnya secara otomatis).
+
+	Membuat seeder secara manual ada di DatabaseSeeder.php
+	untuk menjalankannya ketikkan
+		* php artisan db:seed
+
+		jika ingin menambahkan seed baru biasanya melakukan migrate:fresh lalu melakukan db:seed lagi
+		agar lebih cepat melakukan keduanya bersamaan
+		* php artisan migrate:fresh --seed
+
+		Jika ingin menampilkan siapa yang mengeditnya dengan mengambil data dari seedernya, maka dengan cara menghubungkan $post->user->name
+		Menghubungkan antara model Post dan User dengan membuat method baru user dan posts di masing masing keterhubungan methodnya.
+
+
+
+
+
+#10 Factory & Faker ==============
+
+Akan menggunakan fitur Factory ketika kita akan membuat banyak data sekaligus secara otomatis yang nantinya dijadikan sebagai data di dalam seeder. Yang dimana sebelumnya menambahkan data secara manual di dalam file seedernya.
+Akan juga menggunakan sebuah library Faker untuk membuat data kita otomatis terisi dengan data palsu yang masuk akal secara random.
+
+Factory adalah sebagai pabrik pembuat data.
+Di dalam setiap model pasti ada 
+	* use hasFactory;
+		yang secara default sudah ada dan bisa membuat factorynya.
+
+
+laravel.com >> Eloquent:Factories
+Akan membahas Eloquent Model Factories, Pada saat pengujian kita mungkin saja atau bahkan pasti butuh menambahkan data baru ke dalam database sebelum menambahkan test. Daripada kita secara manual mengisikan datanya di setiap column nya, Laravel itu memungkinkan kita mengdefinisikan sebuah factory ke dalam model kita.
+
+Untuk melihat bagaimana cara kerjanya dapat melihat
+	database\factories\UserFactory.php
+
+	Merubah faker agar menjadi bahasa Indonesia
+		di config\app.php
+	    *  'faker_locale' => env('FAKER_LOCALE', 'en_US'),
+
+		lalu menambahkan di env nya
+		*  FAKER_LOCALE=id_ID
+
+	Membuat data usernya tidak akan menggunakan seeder secara manual tetapi akan menggunakan factory.
+	cara nya dengan menuliskan code	di DatabaseSeedernya
+        *  \App\Models\User::factory(5)->create();
+		lalu php artisan migrate:fresh --seed
+		
+		Maka nanti akan diisikan data user yang dibuat secara random
+	
+	Selanjutnya kita akan membuat factory untuk Post dan Category.
+		* php artisan make:factory PostFactory
+
+		Di dalamnya kita membuat seeder otomatis menggunakan faker. (namun untuk user_id dan category_id agak sedikit tricky)
+		karea untuk sementara tahu user akan dibuat 5 dan kategori akan dibuat 3 maka sementara menggunakan fungsi mt_rand
+		jika sudah lakukan kembali
+		* php artisan migrate:fresh --seed
+
+		Cara cepat membuat Models dengan migrasinya dan seeder dan factory dengan menuliskan
+		* php artisan make:model Student -mfs
+
+	
+	Tujuan selanjutnya kita akan membuat nama user dapat di klik.
+	Dengan membuat route baru untuk authors
+
+
+
+
+
+
+#11 N + 1 ==============
+
+N + 1 Problem, erat kaitannya dengan relasi dan query yang dilakukan di dalam aplikasi.
+
+Apa itu N + 1 Problem dan bagaimana cara mengatasinya ?
+
+Akan menghapus view untuk kategori dan menyatukannya di dalam view Posts.
+
+	N + 1 Problem ini terjadi ketika aplikasi kita mengambil data dari database dimana di dalamnya kita melakukan looping terhadap data. Sehingga yang harusnya memanggil data hanya 2 query (query ke semua dan query ke data yang dicarinya), ini malah melakukan pemanggilan query keseluruhan secara berulang ulang.
+
+	Misalkan di dalam Posts itu melakuakn 1 query untuk mengambil semua postingan untuk data posts, namun karena di dalamnya ada tabel lain (author dan category) maka yang terjadi akan melakukan query lagi yang berulang di dalam looping. Problemnya adalah setiap kita melakukan query untuk mengecek authornya siapa itu dia melakukan pemanggilan terhadap database, looping author dia connect ke database query lagi ke database, mau manggil kategory dia query lagi. Padahal harusnya query yang dilakukan itu cuma 3 (1. ambil semua posts, 2. Ambil semua author 3.ambil semua kategory) tapi ternyata tidak 3x, yang terjadi ambil semua postingan, dimana setiap loopingnya ambil penulis dan ambil kategory, itu hanya untuk 1 post, untuk post berikutnya melakukan hal yang sama berulang. 
+
+	Ini yang dimaksud N + 1 Problem ketika aplikasinya masih kecil maka querynya tidak akan terasa, tetapi jika sudah banyak maka akan makin lambat. Yang terjadi ini sudah secara default oleh laravel ketika kita memiliki relationship.
+
+	Maka di halaman yang tejadi looping laravel melakukan lazy loading (loadingnya malas / ketika dibutuhkan).Dan dapat menggunakan library laravel yaitu clockwork, yang nantinya akan dihubungkan ke sebuah ekstension di browser untuk mengetahui sebenarnya aplikasi PHP melakukan pemanggilan query berapa kali. Untuk mengecek performancenya
+
+
+	Library yang akan diinstall
+		https://github.com/itsgoingd/clockwork
+
+	Dan akan dihubungkan ke sebuah esktension di browser 
+	Untuk mengetahui sebenernya aplikasi laravel kita melakukan query berapa kali, untuk mengecek performancenya.
+
+	Install clockwork	
+		* composer require itsgoingd/clockwork
+
+		jika sudah selesai kita install ekstension clockwork di browsernya
+		untuk mengeceknya ada ketika di inspect menu clockwork lalu untuk melihat querynya pilih menu database maka akan tampil query query yang dilakukannya. Dan maka akan tampil query yang sangan banyak dan juga bisa kita persingkat querynya.
+
+		Yang akan kita lakukan adalah Eager Loading (Semangat) kebalikan dari lazy loading. Lazy itu lakukan saja ketika dibutuhkan, tetapi jika eager loading lakukan semuanya di awal sehingga kita sudah mempunyai datanya sehingga pada saat looping nanti tidak perlu melakukan pemanggilan data ke database lagi.
+
+		Jika ada yang melakukan belongsTo hasMany maka modelnya akan melakukan lazy loading. Artinya data relationshipnya tidak di load atau dipanggil sampai nantinya kita mengakses propertynya pada saat dilooping. 	
+
+		Menggunakan Eager loading dengan menambahkan method with di controllernya.
+		maka yang asalnya di PostController.php
+
+            * "posts" => Post::latest()->get()
+
+			menjadi
+            
+			* "posts" => Post::with(['user', 'category'])->latest()->get()
+			 
+			jadi saat looping sekalian looping juga dengan user dan category diawal looping semua datanya
+
+			maka dengan cara ini membuat pemanggilan querynya hanya menjadi 3.
+
+
+			Dan lakukan juga untuk author namun caranya aga beda, karena menggunakan route model binding di routenya. Ada teknik lain dan tidak menggunakan cara Eager Loading.
+			Dengan cara Lazy Eager Loading.
+
+			https://laravel.com/docs/10.x/eloquent-relationships#lazy-eager-loading
+
+			jadi digabung lazy dan eager loading, kadang kadang kita butuh melakukan eager loading pada relationship kita tapi ketika si parentnya sudah di dapatkan, jadi ga sekalian diambil karena kita sedang melakukan route model binding. kita tidak memakai with() tetapi memakai load().
+			Jadi ketika panggil si authornya kita panggil model sisanya.
+
+			Di dalam Route Web.php yang asalnya authornya
+		        
+				* "posts" => $user->posts
+
+				menjadi 
+				
+				*  "posts" => $user->posts->load('category', 'user')
+
+				lakukan juga untuk kategory dengan hal yang sama
+
+
+
+
+
+#12 Redesign UI
+
+Akan menggunakan Bootstrap dan API dari layanan Unsplash sebagai penyedia gambar.
+Melakukan perubahan pada route untuk membuat halaman by category dan membuat halaman category.
+Menghubungkan dengan API Unsplash berdasarkan kategori yang ada 
+
+	* <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" class="card-img-top" alt="{{ $post->category->name }}" class="img-fluid">
+
+	API Unsplash "https://source.unsplash.com/1200x400?pohon"
+
+
+
+
+
+
+#13 Searching & Pagination
+
+Membuat fitur Searching dan Pagination menggunakan Laravel.
+
+Fitur Searching
+Membuat form untuk search, lalu actionnya mengarah ke /posts dan tangkap datanya menggunakan request.
+Akan memecah query dan membuat pencarian data di modelnya.
+
+Menggunakan juga fitur Query Scopes agar kita bisa membuat filter milik kita sendiri dan akan menggunakan yang local. Dengan menggunakan Local Scopes itu memungkinkan kita untuk mendefinisikan query query umum yang bisa digunakan kembali di dalam aplikasi. Contohnya jika misalkan kita butuh untuk secara sering mengambil data user yang dianggap populer.
+
+Maka di dalam model kita membuat scope seperti berikut
+
+	* public function scopePopular(Builder $query): void
+		{
+			$query->where('votes', '>', 100);
+		}
+
+	Kata scopenya wajib sisanya bebas.
+	akan membuat lebih efisien dengan mengganti dengan menggunakan method when()
+
+	*     public function scopeFilter($query, array $filters){
+			if (isset($filters['search']) ? $filters['search'] : false){
+				return $query->where('title', 'like', '%' . $filters['search'] . "%")
+					->orWhere('excerpt', 'like', '%' . $filters['search'] . "%");
+				}
+			}
+
+	when() method itu akan dijalankan ketika first argumen berisi true jadi tidak akan menggunakan if lagi.
+	Menjadi seperti berikut
+
+	*     $query->when($filters['search'] ?? false, function($query, $search){
+				return $query->where('title', 'like', '%' . $filters['search'] . "%")
+				->orWhere('excerpt', 'like', '%' . $filters['search'] . "%");
+			});
+
+	$query menjalankan method when(ini ga ada ?? dipilih ini, lalu jalankan fungsi yang mengambil $query, kalo ada isinya ambil apa yang ada di dalam $searchnya)
+
+	Selanjutnya akan membuat fitur search lebih spesifik, misalkan kita membuka semua postingan dengan kategory web design lalu kita mencari judul dengan kategory programming. Dan itu harusnya tidak akan muncul postingannya
+
+	buat juga seperti code diatas untuk category dan authors
+
+	*   $query->when($filters['category'] ?? false, function($query, $category){
+            return $query->whereHas('category', function($query) use ($category) {
+                $query->where('slug', $category);
+            });
+        });
+
+        $query->when($filters['authors'] ?? false, function($query, $user){
+            return $query->whereHas('user', function($query) use ($user) {
+                $query->where('username', $user);
+            });
+        });
+
+	lalu sekarang kita arahkan link di viewsnya untuk authors dan category menjadi
+
+	* /posts?authors={{ $post->user->username }}
+
+	Maka akan menampilkan page dengan authors yang sama, lalu kita dapat melakukan search yang dimana kita akan mencari judul dengan nama authornya si a misalkan.
+
+	Dan tambahkan juga code di dalam view form search posts untuk melakukan request berdasarkan category atau authors
+
+	*     <form action="/posts" method="get">
+                @if (request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+                @if (request('authors'))
+                    <input type="hidden" name="authors" value="{{ request('authors') }}">
+                @endif
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search..." name="search" value="{{ request('search') }}">
+                    <button class="btn btn-dark text-white" type="submit">Search</button>
+                  </div>
+            </form>
+
+	Maka untuk Post controller nya sekarang di index yang menampilkan semua data menjadi seperti ini
+
+		*     public function index(){
+				$title = '';
+				if(request('category')){
+					$category = Category::firstWhere('slug', request('category'));
+					$title = ' dengan kategori ' . $category->name;
+				}
+				if(request('authors')){
+					$authors = User::firstWhere('username', request('authors'));
+					$title = ' oleh ' . $authors->name;
+				}
+
+				return view('posts', [
+					"title" => "Semua postingan" .  $title,
+					"active" => "posts",
+					"posts" => Post::latest()->filter(request(['search', 'category', 'authors']))->paginate(7)->withQueryString()
+				]);
+			}
+
+		Karena sekarang menggunakan view posts untuk menampilkan semuanya maka route untuk category berdasarkan slug dan authors berdasarkan username dihapus.
+		Jangan lupa juga untuk mengarahkan hal yang sama di post
+			
+			* /posts?authors={{ $post->user->username }}
+
+		Untuk membuat pagination dengan cara namun secara default laravel menggunakan tailwind untuk tampilan paginationnya
+
+			*     <div class="d-flex justify-content-center mt-5 mb-5">
+					{{ $posts->links() }}
+				</div>
+
+			agar menggunakan bootstrap di AppServiceProvider.php tambahkan code
+
+			*     public function boot(): void
+					{
+						Paginator::useBootstrap();
+					}
+				}
+
+
+
+
+
+
+#14 View Login & Registration
+
+Membuat tampilan untuk Fitur Login dan Registrasi dan akan menggunakan tema yang sudah ada oleh bootstrap.
+
+GetBootstrap.com/example	lalu download dan ekstract
+kemudian pilih yang sign-in
+
+Sebelum itu menambahkan button di dalam navbar untuk melakukan login.
+Lalu untuk memperindah gunakan icon yang sudah disediakan juga oleh bootstrap.
+
+Kemudian buat routes untuk halaman login. Dan buat juga controller untuk Loginnya.
+Kemudian buat method index untuk memanggil viewnya, dan buat sebuah folder login yang di dalamnya ada file index.blade.php.
+Panggil @extends ke layout dan juga panggil @section untuk memulai mengisikan contentnya
+
+Lalu buka file template untuk login yang sudah disediakan oleh bootstrap dan copykan.
+lalu copy juga css nya ke css milik kita di folder public.
+Lalu panggil cssnya di main 
+
+    * <link rel="stylesheet" href="/css/style.css">
+	
+Kemudian buat juga view dan contreoller untuk jika belum punya akun maka akan ke halaman view Registrasi.
+dan lakukan yang sama dengan login, paling edit lagi di form registernya.
+
+
+
+
+
+
+#15 User Registration
+
+Menjalankan fungsi registrasi, jangan lupa untuk memberikan action ke halaman register itu sendiri dan method post.
+Lalu buat route register baru yang melakukan method post dengan memanggil method di RegisterControllernya yaitu store
+Kemudian buat method store di dalam Controllernya.
+
+Jika bertemu dengan 419 | Page Expired
+itu artinya laravel sedang melakukan pengamanan ketika melakukan method post lewat form.
+Dokumentasi Laravel(csrf Protection)
+CSRF (Cross-site request forgery), csrf itu ceritanya sebuah teknik serangan terhadap website dimana biasanya serangan ini memalsukan request dari website yg lain / bajak. Misalkan ada request yang dilakukan oleh website lain ke website kita menggunakan URL yang sesuai. 
+Laravel memiliki Preventing CSRF Request, untuk menjaga requestnya agar selalu dikirimkan dari website kita, dengan menggunakan csrf_token. 
+Maka csrf kita akan menggenerate sebuah token di dalam session dan nanti akan dicocokan dengan yang ada di requestnya. Sama atau tidak jika sama berarti aman sama sama dikitim dari website kita.
+
+caranya cukup menggunakan @csrf di dalam form
+
+lalu kita akan membuat validasi, ada di laravel.com/validation
+maka method menjadi seperti berikut yang @error('name')is-invalid @enderror 
+
+Lalu agar ada text error di bawahnya maka
+
+	*   <input type="text" name="name" class="form-control @error('name')is-invalid @enderror " id="floatingInput" placeholder="Name">
+        	<label for="name">Nama Lengkap</label>
+                @error('name')
+                    <div class="invalid-feedback">
+                        Input your name.
+                    </div>
+                @enderror
+
+	dan lakukan ke semua inputannya
+
+Jika semua nya sudah maka ketika mengisikan form lalu ada kekuranga atau kesalahan yang menyebabkan tampil pesan error.
+Maka itu akan menghapus data form yang telah diisinya, untuk solusinya dengan seperti berikut dan itu berada di dalam inputannya
+
+	* value="{{ old('nama') }}
+
+	Latihan nanti akan menampilkan password untuk mengeceknya.
+
+	masukkan $request di dalam RegisterController ke dalam sebuah variabel.
+	lalu lakukan bcrypt untuk password
+	dan juga buat flashing data agar menampilkan sesuatu ketika berhasil register agar menampilkan pesannya di dalam view registernya menggunakan alert dari bootstrap dan simpan alertnya di view login.
+
+
+
+
+
+#16 User Login & Middleware
+
+Akan membuat dan mengaplikasikan fitur login, sehingga user yang sudah melakukan registrasi bisa masuk ke dalam aplikasi kita.
+
+Laravel.com/Authentication
+Laravel memiliki plugin starter kit, yang khusus untuk menangani Authentication, yaitu Laravel Breeze dan Laravel Jetstream. Pada latihan ini tidak akan menggunakan Laravel Breeze atau starter kitnya. Dan akan membuat Authentication secara Manual.
+
+lakukan sedikit perubahan pada view login agar mengirimkan data login.
+buat juga route login:post yang memanggil method authenticate.
+kemudian buat method authenticate di LoginController-nya
+
+buat juga class is-invalid untuk form login 
+	* @error('email')is-invalid @enderror
+
+buat juga value old nya
+	* value="{{ old('username') }}"
+
+dan buat juga sebuah div untuk menampilkan {{ $message }} errornya.
+
+
+Selanjutnya buat validasi pengecekan apakah email sama dengan yang sudah terdaftar?
+        *  if (Auth::attemp($credentials)) {
+            $request->session()->regenerate();
+
+			return redirect()->intended('dashboard');
+        	}
+
+	kenapa menggunakan regenerate() pada session(), karena untuk menghindari sebuah teknik hacking session fixation. Dengan cara memasuki celah di session pura pua masuk dengan session yang sama tanpa login dahulu. Maka untuk menghindari ini dilakukan generate ulang sessionnya.
+
+	Selanjutnya akan melakukan redirect ke halaman dashboard dengan menjalankan method intended terlebih dahulu.
+	Intended, sebuah method yang disediakan oleh laravel yang akan melakukan redirect usernya ke sebuah tempat atau url sebelum melewati sebuah authentication middleware.
+
+	Dan jika gagal juga, kita harus buat codenya. 
+	masih di dalam method authenticate tambahkan baris code berikut
+
+		# ketika gagal maka lakukan berikut
+        	return back()->with('loginError', 'Login failed!'); 
+
+		lalu selanjutnya di index - login, tampilkan sebuah message failed login
+
+		    * {{-- Failed Login --}}
+				@if(session()->has('loginError'))
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{ session('loginError') }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				@endif
+
+
+	Berikutnya kita akan membuat sebuah controller untuk DashboardController.php dan di dalamnya membuat method index
+	Kemudian buat return ke view dashboard.index.
+
+	Problemnya kita sudah login dan diarahkan ke halaman dashbord namun jika di url diketikkan /login maka akan tetap bisa untuk kembali ke halaman login, yang seharusnya tidak bisa.
+
+	Maka kita harus mempelajari Middleware Authentication.
+	Apa itu Middleware?
+		= middleware itu menyediakan sebuah mekanisme yang memudahkan kita untuk melakukan inspeksi dan filtering http request jadi request kita difilter terlebih dahullu oleh middleware.
+		Middleware itu dapat dipasang di routes kita.
+		
+		Misalkan gini 
+			* Route::get('/login', [LoginController::class, 'index']);
+
+		Jika ada request ke url /login yang metodenya get jalankan [LoginController::class, 'index'] maka kita dapat menambahkan middleware langsung kesini.
+
+		* Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+
+		jika user belum login maka yang tampil tampilan login button, tetapi jika sudah maka akan tampil drop down. ini ada di view navbar yang melakukan auth else.
+		Jadi jika user berhasil login maka akan diarah kan ke dashboard/index dan menampilkan halaman dashboard. jika belum login maka akan menampilkan view dengan adanya button login.
+
+
+
+
+
+#17 Dashboard UI
+
+Download template examples dari bootstrap, kemudian ekstract lalu pilih bagian dashboard dan copykan file css dan js ke dalam folder css dan js kita yang ada di folder public.
+Lalu merubah kembali untuk DashboardController karena tidak akan mengelola lebih dalam fungsi fungsi lainnya, maka di dalam routenya kita langsung mengarahkan ke view index milik dashbord tanpa melalui DashboardController.
+
+	* // Route Dashboard
+		Route::get('/dashboard', function(){
+			return view('dashboard.index');
+		})->middleware('auth');
+
+	Code di edit menjadi seperti itu maka sekarang kita dapat menghapus DashboardControllernya.
+
+Edit file index dashboard dengan template dashboard dari bootstrap. Lalu untuk button logout samakan dengan yang ada di navbar.
+Kemudian akan memecah bagian bagiannya menjadi partials. 
+Pertama buat folder layouts di dalam folder dashboard, lalu di dalam folder layouts buat file baru yaitu main.blade.php. Kemudian pindahkan yang ada di index ke dalam main atau copy kan. Yang ada di main header dan sidebar akan di pindahkan.
+
+Lalu di index kita melakukan @extends ke dashboard.layouts.main 
+
+Kemudian di sidebar postingan kita akan membuat si user bisa melakukan crud, namun akan lebih baik jika si crudnya itu tidak seperti ini misalkan /dashboard/posts/create. kita akan menggunakan resources dari laravelnya.
+Laravel.com/Controller
+
+Jika kita menganggap sebuah model di eloquent kita sebagai resource, itu merupakan sebuah kumpulan aksi yang biasanya kita bikin untuk melakukan sesuatu terhadap resource kita. Contoh kita mempunyai aplikasi yang di dalamnya ada model foto atau movie itu di dalamnya pasti akan terjadi crud. Kerena ini sudah umum dilakukan sebagai use case laravel ini membuatkan sebuah route khusus untuk melakukan CRUD yang dinamakan resource controller. cara bikinnya dengan memanggil make:controller --resources
+
+maka nanti akan otomatis dibuatkan controller yang sudah punya route ka path berikut
+
+Verb			URI						Action			Route Name
+GET				/photos					index			photos.index
+GET				/photos/create			create			photos.create
+POST			/photos					store			photos.store
+GET				/photos/{photo}			show			photos.show
+GET				/photos/{photo}/edit	edit			photos.edit
+PUT/PATCH		/photos/{photo}			update			photos.update
+DELETE			/photos/{photo}			destroy			photos.destroy
+
+Nanti di dalam routes web.php kita tidak perlu membuat 1 per 1 route tersebut
+maka dengan 1 baris ini akan menangani semuanya
+	* Route::Resource('photos', PhotoController::class);Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
+
+Specifying the resource model, jadi kita bisa langsung menentukan route model binding untuk controller baru kita kita akan memberi tahukan bahwa controller yang kita punya selain dia bentuknya resource dia juga langsung terhubung ke model yang mana.
+	* php artisan make:controller DashboardPostController --resource
+	* php artisan make:controller DashboardPostController --resource --model=Post
+
+	maka di dalam fil DashboardPostController sudah akan dibuatkan method method tertentu untuk melakukan CRUD
+	lalu panggil di route
+
+		* Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
+
+		Karena di side bar kita ada yang mengarahkan ke /dashboard/posts 
+		maka secara otomatis akan memanggil DashboardPostController di method indexnya yang akan mengembalikan view baru
+		Kita akan membuat folder baru di dalam folder dashboard yaitu dashboard/posts/index
+
+		Isinya samakan dengan index dashboard, lalu tambahkan table responsive dari file template dashboard milik bootstrap. 
+		lalu di dalam DashboardPostController lakukan return view deangan mengembalikan data
+
+			* return view('dashboard.posts.index', [
+				'posts' => Post::where('user_id', auth()->user()->id)->get()
+			]);
+
+		dan lakukan edit lagi pada tabel agar adanya button di disetiap contentnya, seperti detail, edit, dan delete.
+		Jika routenya menggunakan resource maka kita tidak bisa langsung mengambil atau melihat data berdasarkan { posts/slug } seperti berikut karena resource itu juga sudah memiliki pengaturan defaultnya yaitu id. 
+		ada caranya di laravel.com/route model binding (costumizing the key)
+
+		karena jika tidak ingin selalu menggunakan id kita dapat menimpanya dengan sebuah method getRouteKeyName di dalam modelnya.
+		maka di dalam model Post.php tambahkan
+
+		*  public function getRouteKeyName(): string
+			{
+				return 'slug';
+			}
+
+			selanjutnya di DashboardPostController method show, kita mereturn view dashboard.posts.show 
+			maka oleh karena itu kita harus membuat file show.blade.php di dalam folder dashboard/posts
+			yang isinya melakukan copy dari post dan lakukan sedikit modifikasi
+
+
+
+
+
+#18 Create Post Form
+
+Akan menambah tombol untuk menambahkan postingan di tampilan MyPost.
+
+  * <a href="/dashboard/posts/create" class="btn btn-primary mb-3">Create new Post +</a>
+
+	Lalu di DashboardPostController kita akan melakukan return view('dashboard.posts.create')
+	kemudian buat file create.blade.php
+	dan kemudian di dalamnya akan membua form untuk dapat menambahkan postingan.
+
+	Menginstall package Eloquent Sluggable -> agar jika user membuat judul maka akan otomatis slugnya dibuat.
+	https://github.com/cviebrock/eloquent-sluggable
+
+	Installation
+	* composer require cviebrock/eloquent-sluggable
+
+	cara penggunaan packagenya :
+	Di model yang mana yang ingin digunakan, untuk kasus kita kita akan menggunakannya di model Post.
+
+		tambahkan code code berikut di model postnya
+
+		* use Cviebrock\EloquentSluggable\Sluggable;
+			class Post extends Model {
+				use Sluggable;
+				public function sluggable(): array {
+					return [
+						'slug' => ['source' => 'title']
+					];
+				}
+			}
+
+	supaya slug ini muncul secara otomatis, kita akan menggunakan javascript Ajax untuk mengambil title nya dan ubah menjadi slug
+	tambahkan script di bawah di view createnya, kemudian karena akan menggunakan method baru untuk mengelola slugna maka akan dibua method baru di DashboardPostController.
+	kemudian akan membuat route baru, karena method barunya tidak termasuk resource laravel. route ini harus berada di atas route dashboard/posts karena jika tidak slug otomatis tidak akan berjalan
+
+	Akan menggunakan Trix editor untuk mengisikan text di body.
+	Untuk menggunakannya dengan cara download terlebih dahulu
+
+	- kemudian ekstract, lalu buka folder dist (gunakan trix 1.3.1 agar lebih mudah menemukan file trix.css dan trix.js) kemudian copy kan ke dalam folder css dan js milik kita di public
+
+	- menambahkan 2 file ini di atas headnya
+		<link rel="stylesheet" type="text/css" href="/css/trix.css">
+		<script type="text/javascript" src="/js/trix.js"></script>
+
+	- untuk memulainya dengan menambahkan <trix-editor></trix-editor>
+
+		<form …>
+			<input id="x" type="hidden" name="content">
+			<trix-editor input="x"></trix-editor>
+		</form>	
+
+	- Kemudian tinggal buat di viewnya
+
+
+Untuk penjelasannya dapat di lihat di source codenya.
+
+
+
+
+
+#19 Validation & Insert Post
+
+Lanjutan dari video sebelumnya, Akan memberikan validasi di controllernya
+Membuat Validasi di Controllernya dan membuat sedikit pengamanan dan tampilan jika terjadi error.
+
+
+
+
+
+#20 Update & Delete
+
+Menambahkan fitur Update Data dan Delete Data
+
+Akan menjalankan fungsi fitur Delete terlebih dahulu.
+Masuk ke dalam file index.blade.php di dalam folder /dashboard/posts/ kita akan memasukkan tag link untuk button ke dalam form karena agar kita bisa mendapatkan id dari setiap postnya.
+
+Namun disini kita mengarahkan actionnya ke /dashboard/posts dan methodnya post.
+tapi kenapa post? dant tidak get? 
+karena post akan mengembalikan si slug dari setiap postingannya ke halaman itu sendiri, yang kemudian akan ditangkap oleh si @method('delete')
+kemudian kita akan memanggil method blade yaitu @method('delete')
+karena tag form hanya bisa 2 yaitu get dan post maka kita akan timpa dengan menggunakan @method('delete'), sehingga form tersebut akan melakukan method delete. kemudian ganti yang asalnya berupa tag a menjadi button
+
+	*   <form action="/dashboard/posts/{{ $post->slug }}" method="post" class="d-inline">
+        	@method('delete')
+            @csrf
+                <button class="badge bg-danger text-white border-0" onclick="return confirm('Are you sure?')><span data-feather="trash-2" class="align-text-bottom"></span></button>
+        </form>
+            	{{-- <a href="" class="badge bg-danger text-white"><span data-feather="trash-2" class="align-text-bottom"></span></a> --}}
+
+	dengan begitu buttonnya tidak menjadi link lagi, tetapi menjadi button. Dan ada action ketika button di klik, jika di Ok maka akan masuk ke dalam action method delete. 
+
+Selanjutnya masuk ke dalam Controllernya lalu di bagian method destroy.
+si slugnya akan di kirim ke Controllernya lalu ditangkap oleh (Post $post) kemudian hapus data $post berdasarkan id.
+
+	*	public function destroy(Post $post){
+        	Post::destroy($post->id);
+        	return redirect('/dashboard/posts')->with('success', 'Post has been deleted!');
+    	}
+
+dan jangan lupa button di dalam detail setiap postnya di perbaiki juga
+
+
+Untuk Edit, di halaman index arahkan tag linknya seperti berikut.
+
+    *   <a href="/dashboard/posts/{{ $post->slug }}/edit" class="badge bg-warning text-white"><span data-feather="edit" class="align-text-bottom"></span></a>
+
+	dengan cara seperti ini /dashboard/posts/{{ $post->slug }}/edit merupadakan aturan default dari resource laravel.
+	Kita juga dapat melihat list apa saja yang ada di dalam route resource, dengan mengetikkan 
+
+		* php artisan route:list
+	
+	untuk view edit kita duplicate create dan lakukan bebrapa modifikasi pada viewnya.
+	lalu ubah juga di dalam controllernya. (edit untuk viewnya update untuk prosesnya).
+
+	maka untuk method edit seperti berikut
+
+		    *	public function edit(Post $post) {
+					return view('dashboard.posts.edit', [
+						// datanya akan diisi dengan mengambil data dari $post 
+						'post' => $post,
+						'categories' =>Category::all()
+					]);
+				}
+
+	di dalam view edit ubah title, kemudian ubah form 
+
+		*   <form method="post" action="/dashboard/posts/{{ $post->slug }}" class="mb-5">
+      			@method('put')
+				...
+
+	lalu isikan formnya secara otomatis dengan data sebelumnya. Laravel punya fitur yang keren seperti berikut.
+
+		value="{{ old('title', $post->title) }}
+
+		maksudnya cek, ada old tidak dari title, jika tidak ada maka akan mengambil judulnya. lakukan hal yang sama pada slug, kategori, dan body.
+		dan ubah judul button menjadi update post.
+
+		Sebenarnya update tidak bisa dilakukan begitu saja, kenapa?
+		misalkan ada post 1 dengan slug ... dan kategori programming, lalu ketika ingin diedit hanya merubah kategorinya saja. Ketika di update itu tidak akan bisa karena slugnya sama, maka kita harus merubah menjadi baru slugnya.
+
+		Buka kembali Controllernya, untuk method update akan melakukan validasi yang sama dengan method store maka bisa mengcopynya
+
+		method update
+
+			*	public function update(Request $request, Post $post)
+				{
+					$rules = [
+						'title' => 'required|max:50',
+						// melakukan validasi lagi pada slug, slugnya harus diisi dan juga uniq
+						// kita akan menggunakan slug yang sama tanpa merubahnya.
+						// 'slug' => 'required|unique:posts',
+						'category_id' => 'required',
+						'body' => 'required'
+					];
+
+					// Melakukan pengecekan pada slug (jika slug yg baru itu sama dengan slug yang lama maka itu akan lolos) tapi (jika slug yang baru itu beda dengan slug yang lama maka lakukan validasi)
+					if ($request->slug != $post->slug) {
+						$rules['slug'] = 'required|unique:posts';
+					} 
+
+					$validatedData = $request->validate($rules);
+
+					$validatedData['user_id'] = auth()->user()->id;
+					$validatedData['excerpt'] = Str::limit(strip_tags($request->body), 100 ); 
+
+					// Update
+					Post::where('id', $post->id)
+						->update($validatedData);
+
+					return redirect('/dashboard/posts')->with('success', 'Post has been updated!');
+
+				}
+
+		dan jangan lupa edit di show.blade.php agar button edit berfungsi.
+
+
+
+
+
+#21 Upload Image
+
+Menambahkan fitur Upload Gambar dan menambahkan validasi yang boleh diupload hanya gambar saja.
+Untuk file input upload gambar akan mengambil dari bootstrap.
+
+Buka file create.blade.php lalu tambahkan inputan untuk melakukan upload gambar dan terletak di bawah category.
+
+    *   <div class="mb-3">
+          	<label class="form-label" for="image">Upload Image</label>
+          	<input type="file" class="form-control" id="image" name="image">
+        </div>
+
+	form ini tidak akan berjalan jika kita ingin melakukan upload gambar, kita perlu menambahkan sebuah atribut di dalam formnya. Yaitu enctype="multipart/form-data"
+	Sehingga form ini bisa menangani 2 hal
+	yang pertama adalah inputan dalam bentuk text akan diambil memakai request biasa namun jika ada fileakan diambil oleh request file.
+
+	Kenapa kita harus menambahkan enctype karena jika kita melakukan ddd($request), di dalam request itu hanya akan menerima inputan berupa text, dan untuk gambar akan disimpan di dalam files dan yang ada di files yang akan disimpan.
+
+	Sebenarnya jika kita melakukan sesuatu dan berhasil mengupload gambar maka akan tersimpan di folder storage.
+	
+	Laravel.com/File Storage
+	Cara mengatur gambar ada di konfigurasi file system. config/filesystems.php
+	Di dalamnya kita bisa tau bahwa penyimpanan kita berada di storage/app(default).
+
+	Ini akan tersimpan secara local karena kita akan mengakses gambarnya ketika membuka pagenya. Maka lakukan setting di .env 
+		tambahkan code berikut
+
+		* FILESYSTEM_DISK=public
+
+		dilakukan public karena agar dapat diakses oleh siapa pun
+	
+	maka sekarang file akan disimpan di folder storage/public
+	namun jika kita mencoba mengakses gambarnya seperti ini
+		izu-laravel.test/storage/app/public/post-image/.... .jpg
+		
+		tidak akan terbuka, dan masih tidak bisa diakses, agar bisa diakses folder public yang ada di storage harus dihubungkan dahulu dengan folder public yang ada di dalam aplikasi.
+		Folder public diluar storage adalah folder public yang benar benar bisa diakses oleh user. 
+
+		Cara menghubungkan folder public di dalam aplikasi dengan folder public di dalam storage.
+		dengan menggunakan Symbolic link
+
+			* php artisan storage:link
+
+			maka kita dapat langsung mengaksesnya, dan di dalam folder public akan ada folder storage(symbolic link) yang tempat aslinya ada di storage.
+			untuk dapat menggunakannya kita menggunakan method asset()
+
+			* echo asset('storage/file.txt');
+
+
+kita tidak akan bisa mengupload gambar karena tidak ada field di databasenya untuk menerima gambar. 
+Oleh karena itu kita harus membuat lagi, dan melakukan fresh pada databasenya
+
+di dalam create_posts_table.php lalu tambahkan untuk field gambar
+	* $table->string('image')->nullable();
+
+namanya image dan boleh kosong (karena jika kosong akan menggunakan gambar dari unsplash)
+kenapa harus string karena kita akan menyimpan nama dan tempat penyimpanannya saja.
+karena untuk nama filenya akan disimpan disimpan di dalam database sedangkan filenya akan diupload di directori.
+
+Kemudian buka DatabaseSeeder.php dan tambahkan seeder berikut
+
+	*	\App\Models\User::create([
+            'name' => "Luthfi Nur Ramadhan",
+			'username' => 'izuchii3',
+            'email' => "luthfiramadhan.lr55@gmail.com",
+            'password' => bcrypt('password')
+        ]);
+
+Agar pertama kali melakukaan seed kita sudah memiliki data user baru, dan supaya user pertama kita dan user sisanya random. 
+
+jika sudah lakukan
+	*	php artisan migrate:fresh --seed
+
+Buka kembali DashboardPostController lalu tambahkan validasi untuk image 
+	*   'image' => 'image|file|max:2048',
+
+Buka kembali create.blade.php
+lalu tambahkan error untuk image, lakukan hal yang sama seperti title
+
+Kembali ke DashboardPostController membuat pengecekan jika gambar kosong, karena jika gambar dikosongkan berarti user akan menggunakan gambar dari unsplash.
+
+jika gambar tidak ada atau folder untuk membuat file tidak ada.
+Lakukan 
+
+	* php artisan config:cache
+	* php artisan config:clear
+
+Jika seperti ini selesai maka gambar bisa diupload, Namun ada carnya untuk menampilkan gambar kita tidak menggunakan unsplash. 
+Lakukan pengecekan untuk gambar, seperti berikut
+
+	*	{{-- jika ada field image maka tampilkan --}}
+        @if($post->image)
+            <div style="max-height: 350; overflow: hidden;">
+                <img src="  {{ asset('storage/' . $post->image) }}" class="card-img-top" alt="{{ $post->category->name }}" class="img-fluid">
+                <p>{!! $post->body !!}</p>
+            </div>
+        @else
+            <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" class="card-img-top" alt="{{ $post->category->name }}" class="img-fluid">
+            <p>{!! $post->body !!}</p>
+        @endif
+
+lakukan yang sama untuk di posts, post, dan menu edit data
+
+
+
+
+
+#22 Preview, Update & Delete Image.
+
+Menampilkan Preview Gambar ketika sudah mengupload gambar di dalam form.
+Dengan Menggunakan Fungsi JavaScript, edit di create.blade.php dan arahkan ke bagian image. Tambahkan code berikut
+
+	*	<label class="form-label" for="image">Upload Image</label>
+        <img class="img-preview img-fluid mb-3 col-sm-5">
+        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" onchange="previewImage()">
+
+	Menambahkan fungsi javascript onChange="previewImage()" di dalam formnya yang dimana ketika kita sudah mengupload kan image akan ada image di atasnya dengan mengisikan srcnya oleh Javascript.
+
+	tambahkan javascript di code script paling bawah
+
+		*  	// Image Preview
+				function previewImage() {
+					const image = document.querySelector('#image');                         // nama id input
+					const imgPreview = document.querySelector('.img-preview');              // nama class image
+				
+					// Image Inline to Block
+					imgPreview.style.display = 'block';
+
+					// Ambil data gambar
+					const oFReader = new FileReader();
+					oFReader.readAsDataURL(image.files[0]);
+
+					ofReader.onload = function(oFREvent) {
+					imgPreview.src = oFREvent.target.result;
+					}
+				}
+
+	Jika sudah maka di dalam form ketika ingin menginputkan gambar akan ada preview gambar diatasnya.
+
+
+Selanjutnya Edit Image, untuk formnya jangan lupa diberikan enctype="multipart/form-data"
+Copykan untuk inputan upload gambarnya yang ada di create, dan copykan juga untuk JavaScript Preview Imagenya.
+Alangkan baiknya ketika user melakukan edit, gambar yang sebelumnya ada dan tampil, untuk melakukannya dengan cara membuat sebuah kondisi.
+
+    *	<div class="mb-3">
+			<label class="form-label" for="image">Upload Image</label>
+
+			<input type="hidden" name="oldImage" value="{{ $post->image }}">
+			@if($post->image)
+				<img src="{{ url(asset('storage/' . $post->image)) }}" class="img-preview mb-3 col-sm-5 img-fluid d-flex">
+			@else
+				<img class="img-preview mb-3 col-sm-5 img-fluid d-flex" alt="{{ $post->image }}">
+			@endif
+			
+			<input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" onchange="previewImage()">
+			
+			@error('image')
+			<div class="invalid-feedback">
+				{{ $message }}
+			</div>
+			@enderror
+        </div> 
+	
+	Untuk Image Preview di Page edit sudah selesai, namun ini belum berfungsi karena belum ada validasi di dalam controller updatenya.
+
+    *	public function update(Request $request, Post $post)
+		{
+			$rules = [
+				'title' => 'required|max:50',
+				'category_id' => 'required',
+				'image' => 'image|file|max:2048',
+				'body' => 'required'
+			];
+
+			if ($request->slug != $post->slug) {
+				$rules['slug'] = 'required|unique:posts';
+			} 
+
+			$validatedData = $request->validate($rules);
+
+			if($request->file('image')){
+				if ($request->oldImage) {
+					Storage::delete($request->oldImage);
+				}
+				$validatedData['image'] = $request->file('image')->store('post-images');
+			}
+
+			$validatedData['user_id'] = auth()->user()->id;
+			$validatedData['excerpt'] = Str::limit(strip_tags($request->body), 100 ); 
+
+			Post::where('id', $post->id)
+				->update($validatedData);
+
+			return redirect('/dashboard/posts')->with('success', 'Post has been updated!');
+
+		}
+
+	diatas kita melakukan validasi ketika melakukan upload image, kemudian juga menghapus image sebelumnya, karena jika tidak dihapus image sebelumnya akan tetap ada sehingga, menyebabkan banyaknya image di database.
+	Kemudian untuk method destroynya juga untuk melakukan penghapusan Image
+
+	*   public function destroy(Post $post)
+		{
+			Post::destroy($post->id);
+
+			if ($post->image) {
+				Storage::delete($post->image);
+			}
+			return redirect('/dashboard/posts')->with('success', 'Post has been deleted!');
+		}
+
+
+Problem Ketika User telah melakukan update, postingannya tidak berada di awal.
+
+
+
+
+
+#23 Authorization
+
+Authentication untuk login dan registrasi.
+Authorization setelah login user dapat melakukan apa? jika admin maka bisa ini, jika user biasa maka bisa ini.
+
+Mencoba hal lain, jika admin bisa mengelola kategori dibandingkan user biasa.
+
+Laravel.com/Authorization
+Laravel juga mempunyai cara sederhana untuk melakukan Authorization, dari aksi user terhadap halaman halamannya. 
+Contohnya : Meskipun user itu sudah bisa login bisa saja tidak punya hak akses ke update dan delete dari model tertentu didalam database(melihat data bisa tetapi edit dan hapus tidak bisa) - Authorization.
+
+Laravel Authorization ini menyediakan sebuah cara yang mudah, dan terorganisir untuk mengelola pemeriksaan atau pengecekkan hak akses.
+Ada 2 caranya
+Cara yang pertama dengan menggunakan gates(simpel)
+Cara yang kedua dengan menggunakan policies(kompleks)
+
+Jika menggunakan starter kit menggunakan Laravel (ZetStream atau Breeze) yang didalamnya terdapat fitur authentication dan Authorization yang dapat digunakan. Sebenarnya dibelakang layar yang mereka gunakan tetap gates and policies.
+
+Akan membuat fitur pengelolaan kategori di dalam dashboard.
+
+Membuat Controller Baru 
+	* php artisan make:controller AdminCategoryController --resource --model=Category
+
+Untuk membuat Create, Edit, dan Destroy dapat dilakukan sendiri.
+
+Selanjutnya untuk membuat routenya
+	* Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('auth');
+
+	karena resource maka akan sudah otomatis terhubung ke method create, edit, show, delete. Namun dengan menggunakan except kita dapate melakukan pengecualian, pada method show karena tidak dipakai agar tidak bisa diakses lewat url.
+	untuk mengeceknya dapat langsung cek di web laravelnya atau dengan
+		* php artisan route:list
+
+	Lalu buat juga navigasi di sidebarnya ketika di halaman MyDashboard.
+	Namun tidak akan menambahkan <li></li> lagi karena itu akan menjadi bagian ul yang terpisah. kedepannya akan dibikin agar dia hanya bisa diakses oleh admin jadi punya ul lagi.
+	Kita akan menambahkan judul sama dengan template yang ada di bootstrap.
+
+		* 	<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 	text-muted">
+				<span>ADMINISTRATOR</span>
+			</h6>
+			<ul class="nav flex-column">
+				<li class="nav-item">
+				<a class="nav-link {{ Request::is('dashboard/categories*') ? 'active' : '' }}" href="/dashboard/categories">
+					<span data-feather="pocket" class="align-text-bottom"></span>
+					Post Categories
+				</a>
+				</li>
+			</ul>
+
+	Selanjutnya kita ubah method index untuk controllernya agar mengarah ke category/index.
+		*	return view('dashboard.categories.index', [
+				'categories' => Category::all()
+			]);
+
+	dan di dalam folder dashboard kita buat lagi folder dashboard.category.index
+	untuk tampilan index category samakan dengan index post maka dapat melakukan copy paste
+
+	Problemnya adalah user yang login bisa mengakses kategori. Padahal inginnya misalkan user Izuchii(admin) saja yang bisa melihat Post Category dan user lain tidak bisa mengaksesnya.
+
+	Maka kita akan matikan middlewarenya karena kita akan mengecek sudah login belumnya secara manual, trus jika dia sudah login dia Izuchii atau bukan.
+
+	web.php
+		*	// Route Untuk mengarah ke Controller Category
+			Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show');
+
+	Maka route tersebut akan bisa dibuka oleh siapa pun, maka untuk mencegahnya kita melakukan pengkondisian di controllernya.
+	Seperti berikut :
+		*   if(!auth()->check() || auth()->user()->username !== 'izuchii3'){
+				abort(403);
+			}
+			// Maka dengan begini user selain Izuchii tidak akan bisa melihat category
+
+			return view('dashboard.categories.index', [
+				'categories' => Category::all()
+			]);
+
+	Namun sayangnya kita harus melakukan copy paste pada method yang lainnnya juga. Kita akan membuat si logika login tersebut menjadi middleware tersendiri.
+	Untuk membuat middleware
+		* php artisan make:middleware IsAdmin
+
+		maka akan dibuatkan sebuah class IsAdmin di dalam folder app/http/middleware/IsAdmin.php
+
+		di dalam middleware IsAdmin copy logic pengecekan tadi ke dalam function handle sebelum melakukan return.
+		*   public function handle(Request $request, Closure $next): Response
+			{
+				if(!auth()->check() || auth()->user()->username !== 'izuchii3'){
+					abort(403);
+				}
+				return $next($request);
+			}
+
+		namun ini belum jalan kita harus memasukkan middleware kita ke dalam kernelnya. kernel.php
+		di bagian aliases middleware tambahkan 
+		* 'admin' => \App\Http\Middleware\IsAdmin::class, 
+
+		maka di dalam routenya kita dapat memanggil middleware yang telah kita buat yaitu admin.
+			*	Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
+
+		Maka dengan begini kita tidak perlu memberikan logic tadi di setiap method Controllernya.
+	
+Sekarang kita akan menghilangkan tampilan Post Categories ini jika dia bukan Admin.
+Disini kita baru membutuhkan fitur Authorization menggunakan gates()
+Kita akan menampilkan bagian kecil Post Categories jika dia admin, namun ini tidak akan bisa sefleksibel itu jika menggunakan middleware. Maka kita akan menggunakan Authorization gates
+
+Gates adalah sebuah cara yang bagus untuk mempelajari dasar dasar authorisasi laravel, mekipun jika membuat aplikasinya sudah cukup kompleks harus menggunakan policies(jika misalkan ada,moderator, author, admin, super admin) supaya aturan authorisasinya lebih teorganisir lagi.
+
+Cara membuat gates kita membuat sebuah function apakah seorang user itu memiliki akses untuk melakukan aksi tertentu. Umumnya method gates ini didefinisikan di dalam method boot di file App\Providers\AuthServiceProvider nanti kita membuatnya dengan sebuah Facade Gate.
+Gate ini selalu menerima instans user sebagai argumen pertamanya, jadi otomatis tau user yang lagi loginnya siapa. sehingga kita bisa membuat user yang login itu bisa ngapain aja. Bisa juga kita menambahkan argumen tambahan contohnya argument yang relevan.
+
+Sekarang buka Providers\AppServiceProvider.php dan tambahkan code berikut
+	*   public function boot(): void
+		{
+			Paginator::useBootstrap();
+
+			// Membuat gate yang namanya admin, yang dapat diakses oleh user yang usernamenya 'izuchii3'
+			// Sekarang kita jadi punya 2 authorisasi, yang pertama dengan menggunakan middleware, yang keuntungannya kita dapat melakukan authorisasi dengan method yang banyak sekaligus. Kekurangannya dia tidak fleksibel.
+			
+			
+			Gate::define('admin', function(User $user) {
+				return $user->username === 'izuchii3';
+			});
+		}
+
+	Kemudian untuk menggunakannya kita tidak lagi menggunakan middleware('admin')
+	maka di dalam routenya, yang asalnya
+	*	Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin);
+	menjadi
+	*	Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show');
+
+	Kemudian di dalam AdminCategoryControllernya kita cukup memanggil gate nya seperti berikut.
+	*   public function index()
+		{
+			// Pengecekan Gate 
+			$this->authorize('admin');
+			return view('dashboard.categories.index', [
+				'categories' => Category::all()
+			]);
+		}
+
+
+Dengan begini jika user selain admin tidak akan bisa masuk ke halaman Post Categories. Maka akan tampil 403 This action is Unauthorized.
+
+Kelebihan dengan menggunakan gate adalah gate bisa digunakan dimanapun
+
+Misalkan untuk controllernya kita buat menjadi seperti itu dan untuk routenya kita panggil kembali si middleware  
+	*	public function index()
+		{
+			return view('dashboard.categories.index', [
+				'categories' => Category::all()
+			]);
+		}
+
+	* Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin);
+
+Maka untuk di side bar nya kita tinggal panggil blade directive @can.
+Seperti berikut
+	*   @can('admin')
+		<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+			<span>ADMINISTRATOR</span>
+		</h6>
+		<ul class="nav flex-column">
+			<li class="nav-item">
+			<a class="nav-link {{ Request::is('dashboard/categories*') ? 'active' : '' }}" href="/dashboard/categories">
+				<span data-feather="pocket" class="align-text-bottom"></span>
+				Post Categories
+			</a>
+			</li>
+		</ul>
+		@endcan
+
+Jadi kita menggabungkan. Middleware kita pakai di route, gatenya kita pakai di blade. 
+maka ul ini akan tampil jika dia admin saja, namun jika tidak maka tidak akan tampil
+
+Problem selanjutnya, bagaimana jika adminnya bertambah?
+Sebenarnya kita bisa menambahkan admin lagi di dalam logicnya, namun itu akan cukup repot. Harus melakukan edit di middleware dan Gatenya 
+Oleh karena itu bagaimana jika misalnya supaya laravel mengecek authorisasi lewat field di dalam tabel.
+Misalnya di dalam tabelnya kita menambahkan field baru yang namanya is_admin yang bertipe boolean
+
+Kita akan menyisipkan migrasi field baru, dan jangan ubah ubah untuk create_user_table.php
+Kita akan menggunaka artisan
+ctrl + shift + p >> make:migration >> add_is_admin_to_users_table >> create new table (NO). modifikasi tabel yang sudah ada (Yes) tablenya users
+
+Jika sudah maka akan ada file migrasi baru yang menambahkan is_admin ke tabel users.
+Kemudian tambahkan bariskode berikut
+
+	*   public function up(): void {
+        Schema::table('users', function (Blueprint $table) {
+            // jadi jika ingin menjadi admin kita melakukan edit manual di dalam databasenya
+            $table->boolean('is_admin')->default(false);
+			});
+		}
+
+		public function down(): void {
+			Schema::table('users', function (Blueprint $table) {
+				$table->dropColumn('is_admin');
+			});
+		}
+
+kemudian jalankan migrasinya php artisan migrate(akan menjalankan migrasi yang belum dijalankan saja).
+Dan semunya sudah diberikan is_admin di dalam databasenya dengan nilai defaultnya 0 / false.
+Untuk menjadikan admin kita secara manual melakukan edit di databasenya menjadi 1/true.
+
+Cara mengiplementasikannya di dalam AppServiceProvider.php 
+gatenya sekarang langsung memanggil is_admin seperti berikut
+
+	*	Gate::define('admin', function(User $user) {
+            return $user->is_admin;
+        });
+
+Jangan lupa di middlewarenya IsAdmin.php seperti berikut
+
+	*	public function handle(Request $request, Closure $next): Response
+		{
+			if(!auth()->check() || !auth()->user()->is_admin){
+				abort(403);
+			}
+			return $next($request);
+		}
+
+Jadi jika is_admin 0 tidak akan tampil Post Category.
+Jika is_admin 1 akan tampil Post Category.
+untuk membuat user menjadi admin di dalam databasenya kita mengubah secara manual merubah is_admin menjadi 1.
+
+
+
+
+
+#24 Upload ke Web Hosting (Gratis)
+
+Akan menggunakan 000webhost.com >> Pilih yang free dan lakukan Sign-in.
+
+Nama Website : IzuchiiBlog
+Password : Izuchii1311
+
+Upload your site.
+Maka akan diarahkan ke halaman file managernya.
+Semua file web akan di simpan di dalam public_html

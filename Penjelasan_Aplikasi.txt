@@ -1,0 +1,30 @@
+Download Bootstrap via Composer.
+# Routing
+    - Membuat Route awal dan beberapa tampilan awal, serta membaginya ke-dalam setiap folder atau bagian.
+    - Membuat Route wildCard
+            *sebelumnya buat terlebih dahulu controllernya, agar dapat mencari sesuatu berdasarkan {slug / id}
+# Controller
+    - Membuat controller __invokable, dengan tujuan hanya menampilkan viewnya saja agar route lebih rapih.
+            *sebenarnya bisa dengan hanya menampilkan viewnya langsung dengan route::view()
+# Database
+    - Membuat Database untuk mengelola Postingan.
+        php artisan make:migration create_posts_table
+        php artisan migrate
+# Model
+    - Membuat Model Post
+        php artisan make:model Post
+            *dari runtunan cara diatas ini saling terhubung satu sama lain.
+# Menghubungkan antara Routing, Controller, Database, & Model.
+    - Dapat menampilkan index dari posts-nya.
+    - Dapat show dari slug post yang ada di index.
+    - Membuat Form Create Data dan menjalankan create data sederhana 'title, slug, body'.
+# Membuat Factory Baru untuk Post
+# Mengubungkan & Membuat data dummy untuk Factory User & Post dengan menggunakan Seeder.
+# Membuat Form Edit Data dan menjalankan edit data sederhana 'title, body'
+# Membuat Delete Data.
+# Membuat Upload Image
+    - Menambahkan fungsi baru di method store & update agar bisa mengirimkan image ke db.
+    - Melakukan link storage agar bisa ditampilkan secara public
+        php artisan storage:link
+    - Menampilkan imagenya dengan asset('/storage/' . $post->image)
+    - Jika Melakukan Edit data image yang sebelumnya akan dihapus
